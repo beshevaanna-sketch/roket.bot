@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мини-приложение Ракета</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #1a1a1a; color: #fff; padding-top: 50px; }
+        #multiplier { font-size: 48px; font-weight: bold; margin-bottom: 30px; display: block; }
+        button { padding: 15px 30px; font-size: 18px; border: none; border-radius: 5px; cursor: pointer; background-color: #ff4757; color: white; transition: 0.2s; }
+        button:hover { background-color: #ff6b81; }
+        button:disabled { background-color: #747d8c; cursor: not-allowed; }
+        .rocket { font-size: 60px; margin-bottom: 20px; display: inline-block; }
+        @keyframes launch { 0% { transform: translateY(0); } 100% { transform: translateY(-300px); opacity: 0; } }
+        .launched { animation: launch 2s ease-in-out forwards; }
+    </style>
+</head>
+<body>
+
+    <div id="rocket" class="rocket">🚀</div>
+    <div id="multiplier">1.00x</div>
+    <button id="btn" onclick="startLaunch()">Запуск</button>
+
+    <script>
+        function startLaunch() {
+            const btn = document.getElementById('btn');
+            const rocket = document.getElementById('rocket');
+            const multDisplay = document.getElementById('multiplier');
+            
+            btn.disabled = true;
+            rocket.classList.add('launched');
+
+            let currentMult = 1.0;
+            const maxMult = (Math.random() * 19) + 1; // Максимум чуть меньше 20
+            
+            const interval = setInterval(() => {
+                currentMult += currentMult * 0.05;
+                if (currentMult >= maxMult || currentMult >= 20.0) {
+                    currentMult = Math.min(currentMult, 20.0);
+                    multDisplay.innerHTML = currentMult.toFixed(2) + "x (Упала!)";
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        btn.disabled = false;
+                        rocket.classList.remove('launched');
+                        rocket.style.transform = 'none';
+                        multDisplay.innerHTML = "1.00x";
+                    }, 2000);
+                } else {
+                    multDisplay.innerHTML = currentMult.toFixed(2) + "x";
+                }
+            }, 100);
+        }
+    </script>
+
+</body>
+</html>
